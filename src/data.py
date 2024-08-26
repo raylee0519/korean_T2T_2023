@@ -39,7 +39,7 @@ def Table2TextDataLoader(fname, tokenizer, batch_size, mode="train"):
 
     dataset = load_dataset(fname, mode)
     dataset = dataset.map(
-        preprocess_function, batched=True, num_proc=8, remove_columns=dataset.column_names
+        preprocess_function, batched=True, num_proc=4, remove_columns=dataset.column_names # 배치 사이즈 8->4로 수정
     ).with_format("torch")
 
     dataloader = DataLoader(dataset, shuffle=(True if mode=="train" else False), batch_size=batch_size)

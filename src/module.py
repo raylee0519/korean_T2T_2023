@@ -1,13 +1,10 @@
-
 import os
-
 import pytorch_lightning as pl
 import torch
 import torch.nn.functional as F
 import torchmetrics
 from torch.optim.lr_scheduler import CyclicLR
 from transformers import BartForConditionalGeneration
-
 
 
 class Table2TextModule(pl.LightningModule):
@@ -49,6 +46,9 @@ class Table2TextModule(pl.LightningModule):
             }
         )
 
+        # Assuming logits size is [batch_size, num_classes]
+        self.num_classes = model.config.vocab_size
+
     def training_step(self, batch, batch_idx):
         output = self.model(
             input_ids=batch["input_ids"],
@@ -62,7 +62,13 @@ class Table2TextModule(pl.LightningModule):
         logits = output["logits"][:, :-1].reshape([labels.shape[0], -1])
 
         loss = F.cross_entropy(logits, labels, ignore_index=self.model.config.pad_token_id)
-        accuracy = torchmetrics.functional.accuracy(logits, labels, ignore_index=self.model.config.pad_token_id)
+        accuracy = torchmetrics.functional.accuracy(
+            logits, 
+            labels, 
+            num_classes=self.num_classes, 
+            task='multiclass', 
+            ignore_index=self.model.config.pad_token_id
+        )
 
         metrics = {"loss": loss, "acc": accuracy}
         self.log_dict(metrics, prog_bar=True, logger=True, on_step=True)
@@ -82,7 +88,13 @@ class Table2TextModule(pl.LightningModule):
         logits = output["logits"][:, :-1].reshape([labels.shape[0], -1])
 
         loss = F.cross_entropy(logits, labels, ignore_index=self.model.config.pad_token_id)
-        accuracy = torchmetrics.functional.accuracy(logits, labels, ignore_index=self.model.config.pad_token_id)
+        accuracy = torchmetrics.functional.accuracy(
+            logits, 
+            labels, 
+            num_classes=self.num_classes, 
+            task='multiclass', 
+            ignore_index=self.model.config.pad_token_id
+        )
 
         metrics = {"val_loss": loss, "val_acc": accuracy}
         self.log_dict(metrics, prog_bar=True, logger=True, on_epoch=True)
@@ -106,8 +118,16 @@ class Table2TextModule(pl.LightningModule):
 
         return {
             "optimizer": optimizer,
-            "lr_scheduler": {"scheduler": scheduler, "interval": "step", "name": "Learning Rate"},
+            "lr_scheduler": {
+                "scheduler": scheduler,
+                "interval": "step",
+                "frequency": 1,
+            },
         }
+
+    def lr_scheduler_step(self, scheduler, optimizer_idx, metric):
+        # Custom logic for the learning rate scheduler
+        scheduler.step()
 
     def validation_epoch_end(self, outputs):
         outputs = self.all_gather(outputs)
