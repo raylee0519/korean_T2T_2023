@@ -79,17 +79,24 @@ pip install -r requirements.txt
 ```
 
 ## 실행 방법(How to Run)
-### 학습(Train)
+### 변경 학습 방법 기술 (Train)
 ```
-python -m run train \
-    --output-dir outputs/ttt \
-    --tokenizer "resource/tokenizer/kobart-base-v2(ttt)" \
-    --seed 42 --epoch 10 --gpus 4 --warmup-rate 0.1 \
-    --max-learning-rate 2e-4 --min-learning-rate 1e-5 \
-    --batch-size=32 --valid-batch-size=64 \
-    --logging-interval 100 --evaluate-interval 1 \
-    --wandb-project <wandb-project-name>
+python -m run train `
+    --output-dir outputs/ttt `
+    --tokenizer "resource/tokenizer/kobart-base-v2(ttt)" `
+    --seed 42 `
+    --epoch 10 `
+    --gpus 1 `
+    --warmup-rate 0.1 `
+    --max-learning-rate 2e-4 `
+    --min-learning-rate 1e-5 `
+    --batch-size 8 `
+    --valid-batch-size 64 `
+    --logging-interval 100 `
+    --evaluate-interval 1 `
+    --wandb-project korean2024_project
 ```
+- 변경 사항 : gpu 1로 수정, batch-size 8로 수정 (용량 한도)
 - 기본 모델은 `SKT-KoBART`를 이용합니다.
 - BART 외의 pretrained model을 이용해서 학습하고 싶은 경우, 코드를 수정할 필요가 있습니다.
 - 학습 로그 및 모델은 지정한 `output-dir`에 저장됩니다.
