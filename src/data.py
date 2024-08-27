@@ -15,13 +15,13 @@ def Table2TextDataLoader(fname, tokenizer, batch_size, mode="train"):
     """
     def preprocess_function(examples):
         tokenizer_input = tokenizer([tokenizer.bos_token+s+tokenizer.eos_token for s in examples["table"]],
-                                    padding="max_length", max_length=256, truncation=True, return_tensors="pt", return_token_type_ids=False)
+                                    padding="max_length", max_length=512, truncation=True, return_tensors="pt", return_token_type_ids=False)
         encoder_input_ids = tokenizer_input["input_ids"]
         encoder_attention_mask = tokenizer_input["attention_mask"]
 
         if mode=="train":
             tokenizer_output = tokenizer([tokenizer.bos_token+s+tokenizer.eos_token for s in examples["text"]],
-                                        padding="max_length", max_length=256, truncation=True, return_tensors="pt", return_token_type_ids=False)
+                                        padding="max_length", max_length=512, truncation=True, return_tensors="pt", return_token_type_ids=False)
             decoder_input_ids = tokenizer_output["input_ids"]
             decoder_attention_mask = tokenizer_output["attention_mask"]
 
