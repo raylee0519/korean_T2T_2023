@@ -97,7 +97,7 @@ python -m run train `
     --tokenizer "resource/tokenizer/kobart-base-v2(ttt)" `
     --seed 42 `
     --epoch 7 `
-    --gpus 8 `
+    --devices 8 `
     --warmup-rate 0.2 `
     --max-learning-rate 2e-4 `
     --min-learning-rate 1e-5 `
@@ -107,7 +107,7 @@ python -m run train `
     --evaluate-interval 1 `
     --wandb-project korean2024_project
 ```
-- 주요 변경 사항 : epoch 7, warmup-rate 0.2로 수정
+- 주요 변경 사항 : epoch 7, warmup-rate 0.2, gpu를 device로 수정 (최신 버전)
 - 기본 모델은 `SKT-KoBART`를 이용합니다.
 - BART 외의 pretrained model을 이용해서 학습하고 싶은 경우, 코드를 수정할 필요가 있습니다.
 - 학습 로그 및 모델은 지정한 `output-dir`에 저장됩니다.
