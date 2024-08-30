@@ -78,6 +78,17 @@ Install python dependency
 pip install -r requirements.txt
 ```
 
+## 실행 환경 (Environment)
+```
+CUDA == 11.8 with torch 2.0.1
+wandb == 0.13.4
+torchmetrics == 0.11.4
+torchvision == 0.15.2+cu118
+torchaudio == 2.0.2
+pytorch-lightning == 1.7.7
+```
+
+
 ## 실행 방법(How to Run)
 ### 변경 학습 방법 기술 (Train)
 ```
